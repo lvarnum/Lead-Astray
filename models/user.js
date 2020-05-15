@@ -7,6 +7,20 @@ module.exports = function(sequelize, DataTypes) {
     "User",
     {
       // The email cannot be null, and must be a proper email before creation
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1, 140]
+        }
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1, 140]
+        }
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,

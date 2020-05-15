@@ -1,15 +1,15 @@
 {
   "development": {
     "username": "root",
-    "password": null,
-    "database": "project_2_local",
+    "password": "TuckEverlasting8",
+    "database": "lead_astray_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": null,
-    "database": "project_2_test",
+    "database": "lead_astray_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

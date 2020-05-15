@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS project_2_local;
-CREATE DATABASE project_2_local;
+DROP DATABASE IF EXISTS lead_astray_db;
+CREATE DATABASE lead_astray_db;
 
-DROP DATABASE IF EXISTS project_2_test;
-CREATE DATABASE project_2_test;
+DROP DATABASE IF EXISTS lead_astray_test;
+CREATE DATABASE lead_astray_test;
