@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
     reward: {
       type: DataTypes.BOOLEAN,
       default: false
+    },
+    petType: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   });
 
