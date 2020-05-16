@@ -22,7 +22,7 @@ router.post("/signup", function(req, res) {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     phoneNumber: req.body.phoneNumber,
-    locationId: req.body.locationID
+    LocationId: req.body.locationID
   })
     .then(function() {
       res.redirect(307, "/auth/login");

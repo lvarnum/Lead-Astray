@@ -96,6 +96,7 @@
       crossStreetTwoInput = "";
     });
 
+    // NEED TO FIX THIS FUNCTION
     function getLocation(location) {
       $.get("/api/locations", {
       })
@@ -123,11 +124,10 @@
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
-        locationId: locationId
-
+        LocationId: locationId
       })
         .then(function () {
-          window.location.replace("/forum");
+          window.location.replace("/");
           // If there's an error, log the error
         })
         .catch(function (err) {
