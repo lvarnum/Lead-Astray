@@ -1,74 +1,138 @@
- {{> navbar user}}
+{{> navbar user}}
 
-<div class="container">  
-    <div class="row">
+<div class="container">
+  <div class="row">
     <div class="col-md">
       <div class="jumbotron">
         <h4 class="display-6">Signup Form</h4>
       </div>
     </div>
   </div>
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <form class="signup">
-                <div class="form-group">
-                    <label for="email-input">Email address</label>
-                    <input type="email" class="form-control" id="email-input" name="email" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <label for="password-input">Password</label>
-                    <input type="password" class="form-control" id="password-input" name="password" placeholder="Password">
-                </div>
-                <div style="display: none" id="alert" class="alert alert-danger" role="alert">
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">Error:</span> <span class="msg"></span>
-                </div>
-                <button type="submit" class="btn btn-primary">Sign Up</button>
-            </form>
-            <br />
-            <p>Or log in <a href="/login">here</a></p>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <form class="signup">
+        <div class="form-group">
+          <label for="firstName-input">First Name</label>
+          <input type="text" class="form-control" id="firstName-input" name="firstName" placeholder="First Name">
         </div>
+        <div class="form-group">
+          <label for="lastName-input">Last Name</label>
+          <input type="text" class="form-control" id="lastName-input" name="lastName" placeholder="Last Name">
+        </div>
+        <div class="form-group">
+          <label for="email-input">Email address</label>
+          <input type="email" class="form-control" id="email-input" name="email" placeholder="Email">
+        </div>
+        <div class="form-group">
+          <label for="password-input">Password</label>
+          <input type="password" class="form-control" id="password-input" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber-input">Phone Number</label>
+          <input type="text" class="form-control" id="phoneNumber-input" name="phoneNumber" placeholder="Phone Number">
+        </div>
+        <label>Enter Your Closest Major Intersection</label>
+        <div class="form-group">
+          <label for="crossStreetOne-input">Cross Street One</label>
+          <input type="text" class="form-control" id="crossStreetOne-input" name="crossStreetOne"
+            placeholder="Cross Street One">
+        </div>
+        <div class="form-group">
+          <label for="crossStreetTwo-input">Cross Street Two</label>
+          <input type="text" class="form-control" id="crossStreetTwo-input" name="crossStreetTwo"
+            placeholder="Cross Street Two">
+        </div>
+        <div style="display: none" id="alert" class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span> <span class="msg"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+      </form>
+      <br />
+      <p>Or log in <a href="/login">here</a></p>
     </div>
+  </div>
 </div>
 
 <script>
-$(document).ready(function() {
-  // Getting references to our form and inputs
-  var signupForm = $("form.signup");
-  var emailInput = $("input#email-input");
-  var passwordInput = $("input#password-input");
+  $(document).ready(function () {
+    // Getting references to our form and inputs
+    var signupForm = $("form.signup");
+    var emailInput = $("input#email-input");
+    var passwordInput = $("input#password-input");
+    var firstNameInput = $("input#firstName-input");
+    var lastNameInput = $("input#lastName-input");
+    var phoneNumberInput = $("input#phoneNumber-input");
+    var crossStreetOneInput = $("input#crossStreetOne-input");
+    var crossStreetTwoInput = $("input#crossStreetTwo-input");
 
-  // When the form is submitted, we validate there's an email and password entered
-  signupForm.on("submit", function(event) {
-    event.preventDefault();
-    var userData = {
-      email: emailInput.val().trim(),
-      password: passwordInput.val().trim()
-    };
+    // When the form is submitted, we validate there's an email and password entered
+    signupForm.on("submit", function (event) {
+      event.preventDefault();
+      var userData = {
+        email: emailInput.val().trim(),
+        password: passwordInput.val().trim(),
+        phoneNumber: phoneNumberInput.val().trim(),
+        firstName: firstNameInput.val().trim(),
+        lastName: lastNameInput.val().trim(),
+        location: crossStreetOneInput.val().trim() + "/" + crossStreetTwoInput.val().trim()
+      };
 
-    if (!userData.email || !userData.password) {
-      return;
+      if (!userData.email || !userData.password) {
+        return;
+      }
+
+      // Get locationID or Create new location
+      var locationId = getLocation(userData.location);
+
+      // If we have an email and password we run the signUp function and clear the form
+      signupUser(userData.email, userData.password, userData.firstName, userData.lastName, userData.phoneNumber, locationId);
+      emailInput.val("");
+      passwordInput.val("");
+      firstNameInput = "";
+      lastNameInput = "";
+      phoneNumberInput = "";
+      crossStreetOneInput = "";
+      crossStreetTwoInput = "";
+    });
+
+    function getLocation(location) {
+      $.get("/api/locations", {
+      })
+      .then((response) => {
+        for (let i = 0; i < response.length; i++) {
+          if (response[i].name === location) {
+            return response[i].id;
+          }
+        }
+      });
+
+      $.post("/api/locations", {
+        name: location
+      })
+      .then((response) => {
+        return response.id;
+      })
     }
 
-    // If we have an email and password we run the signUp function and clear the form
-    signupUser(userData.email, userData.password);
-    emailInput.val("");
-    passwordInput.val("");
-  });
+    // signUp does a post to our "auth/login" route and if successful, redirects us the the members page
+    function signupUser(email, password, firstName, lastName, phoneNumber, locationId) {
+      $.post("/auth/signup", {
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        locationId: locationId
 
-  // signUp does a post to our "auth/login" route and if successful, redirects us the the members page
-  function signupUser(email, password) {
-    $.post("/auth/signup", {
-      email: email,
-      password: password
-    })
-      .then(function() {
-        window.location.replace("/forum");
-        // If there's an error, log the error
       })
-      .catch(function(err) {
-        console.log(err);
-      });
-  }
-});
+        .then(function () {
+          window.location.replace("/forum");
+          // If there's an error, log the error
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+    }
+  });
 </script>

@@ -18,7 +18,11 @@ router.post("/signup", function(req, res) {
   console.log(req.body);
   db.User.create({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    phoneNumber: req.body.phoneNumber,
+    locationId: req.body.locationID
   })
     .then(function() {
       res.redirect(307, "/auth/login");
