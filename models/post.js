@@ -6,8 +6,14 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         len: [1]
       }
+    },
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      validate: {
+        len: [1]
+      }
     }
-    // Took out body
   });
 
   Post.associate = function(models) {
@@ -18,13 +24,11 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
-  };
-
-  Post.associate = function(models) {
     Post.hasOne(models.Pet, {
       //  might need to add something
       onDelete: "cascade"
     });
+    Post.belongsTo(models.Post, {});
   };
 
   return Post;
