@@ -47,7 +47,11 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
-    Pet.hasOne(models.Location, {});
+    Pet.belongsTo(models.Location, {
+      foreignKey: {
+        allowNull: false
+      }
+    });
   };
 
   return Pet;

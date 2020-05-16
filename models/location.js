@@ -12,10 +12,8 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Location.associate = function(models) {
-    Location.belongsToMany(models.Pet, {
-      // Might need to change this
-      through: "PetLocations"
-    });
+    Location.hasMany(models.Pet, {});
+    Location.hasMany(models.User, {});
   };
 
   return Location;

@@ -70,6 +70,12 @@ module.exports = function(sequelize, DataTypes) {
     User.hasMany(models.Post, {
       onDelete: "cascade"
     });
+
+    User.belongsTo(models.Location, {
+      foreignKey: {
+        allowNull: false
+      }
+    });
   };
 
   return User;
