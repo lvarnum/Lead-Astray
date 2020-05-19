@@ -1,11 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
   const Pet = sequelize.define("Pet", {
     name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 140]
-      }
+      type: DataTypes.STRING
     },
     age: {
       type: DataTypes.INTEGER,
@@ -19,8 +15,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         notEmpty: true,
-        // Might need to be longer or might not need
-        len: [1, 500]
+        len: [1]
       }
     },
     microchip: {
@@ -42,10 +37,8 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Pet.associate = function(models) {
-    Pet.belongsTo(models.Post, {
-      foreignKey: {
-        allowNull: false
-      }
+    Pet.hasOne(models.Post, {
+      onDelete: "cascade"
     });
     Pet.belongsTo(models.Location, {
       foreignKey: {

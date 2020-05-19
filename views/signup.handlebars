@@ -1,14 +1,14 @@
 {{> navbar user}}
 
-<div class="container">
+<div class="container signup-cont">
   <div class="row">
     <div class="col-md">
-      <div class="jumbotron">
-        <h4 class="display-6">Signup Form</h4>
+      <div class="jumbotron text-center signup-title">
+        <h4 class="display-6">Signup</h4>
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row justify-content-center">
     <div class="col-md-6 col-md-offset-3">
       <form class="signup">
         <div class="form-group">
@@ -31,7 +31,7 @@
           <label for="phoneNumber-input">Phone Number</label>
           <input type="text" class="form-control" id="phoneNumber-input" name="phoneNumber" placeholder="Phone Number">
         </div>
-        <label>Enter Your Closest Major Intersection</label>
+        <label>Enter Your Closest Major Intersection</label><hr>
         <div class="form-group">
           <label for="crossStreetOne-input">Cross Street One</label>
           <input type="text" class="form-control" id="crossStreetOne-input" name="crossStreetOne"
@@ -49,7 +49,7 @@
         <button type="submit" class="btn btn-primary">Sign Up</button>
       </form>
       <br />
-      <p>Or log in <a href="/login">here</a></p>
+      <p class="orLogin">Or log in <a href="/login">here</a></p>
     </div>
   </div>
 </div>
@@ -82,11 +82,7 @@
         return;
       }
 
-      // Get locationID or Create new location
-      var locationId = getLocation(userData.location);
-
-      // If we have an email and password we run the signUp function and clear the form
-      signupUser(userData.email, userData.password, userData.firstName, userData.lastName, userData.phoneNumber, locationId);
+      setLocation(userData);
       emailInput.val("");
       passwordInput.val("");
       firstNameInput = "";
@@ -96,24 +92,24 @@
       crossStreetTwoInput = "";
     });
 
-    // NEED TO FIX THIS FUNCTION
-    function getLocation(location) {
+    // Get the locationId for the user and sign them up
+    function setLocation(userData) {
       $.get("/api/locations", {
       })
-      .then((response) => {
-        for (let i = 0; i < response.length; i++) {
-          if (response[i].name === location) {
-            return response[i].id;
+        .then((response) => {
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].name === userData.location) {
+              signupUser(userData.email, userData.password, userData.firstName, userData.lastName, userData.phoneNumber, response[i].id);
+            }
           }
-        }
-      });
+        });
 
       $.post("/api/locations", {
-        name: location
+        name: userData.location
       })
-      .then((response) => {
-        return response.id;
-      })
+        .then((response) => {
+          signupUser(userData.email, userData.password, userData.firstName, userData.lastName, userData.phoneNumber, response.id);
+        })
     }
 
     // signUp does a post to our "auth/login" route and if successful, redirects us the the members page
@@ -127,6 +123,7 @@
         LocationId: locationId
       })
         .then(function () {
+          // Get locationID or Create new location
           window.location.replace("/");
           // If there's an error, log the error
         })

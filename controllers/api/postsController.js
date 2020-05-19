@@ -14,7 +14,7 @@ router.get("/", function(req, res) {
  * Post - Read One
  */
 router.get("/:id", function(req, res) {
-  db.Post.findById(req.params.id)
+  db.Post.findOne({ where: { id: req.params.id } })
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
 });

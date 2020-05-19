@@ -14,7 +14,7 @@ router.get("/", function(req, res) {
  * Location - Read One
  */
 router.get("/:id", function(req, res) {
-  db.Location.findById(req.params.id)
+  db.Location.findOne({ where: { id: req.params.id } })
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
 });
@@ -27,23 +27,5 @@ router.post("/", function(req, res) {
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
 });
-
-/**
- * Location- Update
- */
-// router.put("/:id", function(req, res) {
-//   db.Location.update(req.body, { where: { id: req.params.id } })
-//     .then(dbModel => res.json(dbModel))
-//     .catch(err => res.status(422).json(err));
-// });
-
-/**
- * Location - Delete
- */
-// router.delete("/:id", function(req, res) {
-//   db.Location.destroy({ where: { id: req.params.id } })
-//     .then(dbModel => res.json(dbModel))
-//     .catch(err => res.status(422).json(err));
-// });
 
 module.exports = router;

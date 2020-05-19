@@ -14,7 +14,7 @@ router.get("/", function(req, res) {
  * Pet - Read One
  */
 router.get("/:id", function(req, res) {
-  db.Pet.findById(req.params.id)
+  db.Pet.findOne({ where: { id: req.params.id } })
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
 });
@@ -43,10 +43,10 @@ router.put("/:id", function(req, res) {
 /**
  * Pet - Delete
  */
-// router.delete("/:id", function(req, res) {
-//   db.Pet.destroy({ where: { id: req.params.id } })
-//     .then(dbModel => res.json(dbModel))
-//     .catch(err => res.status(422).json(err));
-// });
+router.delete("/:id", function(req, res) {
+  db.Pet.destroy({ where: { id: req.params.id } })
+    .then(dbModel => res.json(dbModel))
+    .catch(err => res.status(422).json(err));
+});
 
 module.exports = router;

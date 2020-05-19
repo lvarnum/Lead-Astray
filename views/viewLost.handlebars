@@ -1,0 +1,19 @@
+{{> navbar user }}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <div class="jumbotron text-center lost-title">
+                <h4 class="display-6">Lost Pets</h4>
+            </div>
+        </div>
+    </div>
+    {{#if user.email}}
+    <div class="row">
+        <div class="col">
+            <h4 class="text-center">Featured Lost Pets in Your Area</h4>
+            <hr>
+        </div>
+    </div>
+    {{/if}}
+</div>

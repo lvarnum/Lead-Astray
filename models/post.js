@@ -24,9 +24,10 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
-    Post.hasOne(models.Pet, {
-      //  might need to add something
-      onDelete: "cascade"
+    Post.belongsTo(models.Pet, {
+      foreignKey: {
+        allowNull: false
+      }
     });
     Post.belongsTo(models.Post, {});
   };
