@@ -10,37 +10,26 @@
     </div>
     <div class="row">
         <div class="col text-center">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-header text-center">Browse</div>
+            <div class="card border-success mb-3 view-card">
+                <div class="card-header view text-center bg-success text-white">View</div>
                 <div class="card-body">
-                    <button type="button" class="btn btn-warning">Lost Pets</button>
-                    <br>
-                    <br>
-                    <button type="button" class="btn btn-warning">Found Pets</button>
+                    <a href="/view/lost"><button type="button" class="btn btn-outline-success" id="viewLost">Lost Pets</button></a>
+                    <div>________</div>
+                    <a href="/view/found"><button type="button" class="btn btn-outline-success" id="viewFound">Found Pets</button></a>
                 </div>
             </div>
         </div>
         <div class="col text-center">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-header text-center">Post</div>
+            <div class="card border-success mb-3 post-card">
+                <div class="card-header post text-center bg-success text-white">Post</div>
                 <div class="card-body">
-                    <button type="button" class="btn btn-success" id="postLost">Lost Pets</button>
-                    <br>
-                    <br>
-                    <button type="button" class="btn btn-success" id="postFound">Found Pets</button>
+                    <a href="/post/lost"><button type="button" class="btn btn-outline-success lost" id="postLost">Lost Pets</button></a>
+                    <div>________</div>
+                    <a href="/post/found"><button type="button" class="btn btn-outline-success found" id="postFound">Found Pets</button></a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        $(document).ready(function () {
-            $("#postLost").on("click", function () {
-                window.location.replace("/login");
-            });
-
-            $("#postFound").on("click", function () {
-                window.location.replace("/login");
-            });
-        });
     </script>

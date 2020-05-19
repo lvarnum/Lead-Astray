@@ -1,6 +1,6 @@
 form.signup,
 form.login {
-  margin-top: 50px;
+  margin-top: 15px;
 }
 
 .forum-post-card {
@@ -13,9 +13,57 @@ form.login {
 
 footer {
   text-align: center;
-  background-color: black;
+  background-color: lightseagreen;
+  padding: 5px;
+}
+
+body {
+  background-color: mintcream;
+}
+
+.navbar-brand {
+  font-size: 35px;
 }
 
 .homeHeader {
-  margin-top: 50px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.view, .post {
+  font-size: 30px;
+}
+
+.view-card, .post-card {
+  border-width: 2px;
+  background-color: mintcream;
+}
+
+.login-title, .signup-title, .profile-title, .lost-title, .found-title {
+  margin-top: 15px;
+  background-color: aliceblue;
+}
+
+.orLogin {
+  margin-bottom: 80px;
+}
+
+.commentLegend {
+  margin-top: 100px;
+}
+
+.dropdown-menu {
+  margin-right: 5px;
+}
+
+#viewLost, #postLost {
+  margin-bottom: 5px;
+}
+
+#viewFound,  #postFound {
+  margin-top: 25px;
+}
+
+.nav-img {
+  margin-right: 10px;
 }
