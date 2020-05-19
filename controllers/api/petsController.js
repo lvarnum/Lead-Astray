@@ -23,10 +23,7 @@ router.get("/:id", function(req, res) {
  * Pet - Create
  */
 router.post("/", function(req, res) {
-  db.Pet.create({
-    PostId: req.post.id,
-    ...req.body
-  })
+  db.Pet.create(req.body)
     .then(dbModel => res.json(dbModel))
     .catch(err => res.status(422).json(err));
 });
