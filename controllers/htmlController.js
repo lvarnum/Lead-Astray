@@ -74,9 +74,20 @@ router.get("/profile", isAuthenticated, function(req, res) {
  */
 router.get("/view/lost", function(req, res) {
   db.Post.findAll({ where: { title: "Lost" }, raw: true, include: [db.Pet] })
-    .then(dbModel => {
-      console.log(dbModel); // Take out when done testing functionality
-      res.render("viewLost", { user: req.user, posts: dbModel });
+    .then(postModel => {
+      db.Pet.findAll({
+        where: { LocationId: req.user.LocationId },
+        raw: true,
+        include: [db.Post]
+      }).then(petModel => {
+        console.log(postModel);
+        console.log(petModel);
+        res.render("viewLost", {
+          user: req.user,
+          posts: postModel,
+          pets: petModel
+        });
+      });
     })
     .catch(err => res.status(422).json(err));
 });

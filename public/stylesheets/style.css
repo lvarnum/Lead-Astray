@@ -1,6 +1,13 @@
 form.signup,
-form.login {
+form.login,
+form.lostPet,
+form.foundPet {
   margin-top: 15px;
+}
+
+form.lostPet,
+form.foundPet {
+  margin-bottom: 100px;
 }
 
 .forum-post-card {
@@ -66,4 +73,17 @@ body {
 
 .nav-img {
   margin-right: 10px;
+}
+
+.no-reward {
+margin-bottom: 15px;
+}
+
+.no-micro {
+  margin-bottom: 10px;
+}
+
+.viewPet{
+  display: block;
+  margin: 0 auto;
 }

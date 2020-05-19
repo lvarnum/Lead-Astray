@@ -1,10 +1,12 @@
 module.exports = function(sequelize, DataTypes) {
   const Pet = sequelize.define("Pet", {
     name: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true
     },
     age: {
       type: DataTypes.INTEGER,
+      allowNull: true,
       validate: {
         isNumeric: true,
         isInt: true

@@ -15,4 +15,169 @@
             <hr>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="lostPet">
+                <div class="form-group">
+                    <label>Choose Pet Type</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="cat" name="type" value="cat" class="custom-control-input">
+                        <label class="custom-control-label" for="cat">Cat</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="dog" name="type" value="dog" class="custom-control-input">
+                        <label class="custom-control-label" for="dog">Dog</label>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="petName-input">Pet Name</label>
+                    <input type="text" class="form-control" id="petName-input" name="Pet Name" placeholder="Pet Name">
+                </div>
+                <div class="form-group">
+                    <label for="petAge-input">Pet Age</label>
+                    <input type="text" class="form-control" id="petAge-input" name="petAge" placeholder="Pet Age">
+                </div>
+                <div class="form-group">
+                    <label for="petDescription-input">Pet Description</label>
+                    <textarea class="form-control" id="petDescription-input" name="petDescription"
+                        placeholder="Enter your pet's description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Microchip</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="microchip-yes" name="microchip" value="yes"
+                            class="custom-control-input">
+                        <label class="custom-control-label" for="microchip-yes">Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio no-micro">
+                        <input type="radio" id="microchip-no" name="microchip" value="no" class="custom-control-input">
+                        <label class="custom-control-label" for="microchip-no">No</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Reward</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="reward-yes" name="reward" value="yes" class="custom-control-input">
+                        <label class="custom-control-label" for="reward-yes">Yes</label>
+                    </div>
+                    <div class="custom-control custom-radio no-reward">
+                        <input type="radio" id="reward-no" name="reward" value="no" class="custom-control-input">
+                        <label class="custom-control-label" for="reward-no">No</label>
+                    </div>
+                </div>
+                <label>Enter Closest Major Intersection Where Your Pet Was Last Seen</label>
+                <hr>
+                <div class="form-group">
+                    <label for="crossStreetOne-input">Cross Street One</label>
+                    <input type="text" class="form-control" id="crossStreetOne-input" name="crossStreetOne"
+                        placeholder="Cross Street One">
+                </div>
+                <div class="form-group">
+                    <label for="crossStreetTwo-input">Cross Street Two</label>
+                    <input type="text" class="form-control" id="crossStreetTwo-input" name="crossStreetTwo"
+                        placeholder="Cross Street Two">
+                </div>
+                <button type="submit" class="btn btn-primary">Post Pet</button>
+            </form>
+        </div>
+    </div>
 </div>
+<script>
+    $(document).ready(function () {
+        // Getting references to our form and inputs
+        var lostForm = $("form.lostPet");
+
+        lostForm.on("submit", function (event) {
+            event.preventDefault();
+            var petTypeInput = $("input[name='type']:checked");
+            var petDescriptionInput = $("textarea#petDescription-input");
+            var petNameInput = $("input#petName-input");
+            var microchipInput = $("input[name='microchip']:checked");
+            var rewardInput = $("input[name='reward']:checked");
+            var petAgeInput = $("input#petAge-input");
+            var crossStreetOneInput = $("input#crossStreetOne-input");
+            var crossStreetTwoInput = $("input#crossStreetTwo-input");
+            var microchip;
+            var reward;
+            if (microchipInput.val() === "yes") {
+                microchip = true;
+            }
+            if (microchipInput.val() === "no") {
+                microchip = false;
+            }
+            if (rewardInput.val() === "yes") {
+                reward = true;
+            }
+            if (rewardInput.val() === "no") {
+                reward = false;
+            }
+            var petData = {
+                petType: petTypeInput.val(),
+                petName: petNameInput.val().trim(),
+                petDescription: petDescriptionInput.val().trim(),
+                petAge: petAgeInput.val().trim(),
+                microchip: microchip,
+                reward: reward,
+                location: crossStreetOneInput.val().trim() + "/" + crossStreetTwoInput.val().trim()
+            };
+
+            setLocation(petData);
+            petTypeInput.val();
+            petDescriptionInput.val("");
+            petNameInput.val("");
+            microchipInput.val();
+            rewardInput.val();
+            petAgeInput.val("");
+            crossStreetOneInput.val("");
+            crossStreetTwoInput.val("");
+
+            function setLocation(petData) {
+                $.get("/api/locations", {
+                })
+                    .then((response) => {
+                        for (let i = 0; i < response.length; i++) {
+                            if (response[i].name === petData.location) {
+                                createPet(petData, response[i].id);
+                            }
+                        }
+                    });
+
+                $.post("/api/locations", {
+                    name: petData.location
+                })
+                    .then((response) => {
+                        createPet(petData, response.id);
+                    });
+            }
+
+            // Need to add picture!!!
+            function createPet(petData, locationId) {
+                console.log(petData);
+                $.post("/api/pets", {
+                    name: petData.petName,
+                    petType: petData.petType,
+                    description: petData.petDescription,
+                    age: petData.petAge,
+                    microchip: petData.microchip,
+                    reward: petData.reward,
+                    LocationId: locationId
+                }).then(response => {
+                    createPost(response.id);
+                });
+            }
+
+            function createPost(petId) {
+                $.post("/api/posts", {
+                    title: "Lost",
+                    body: "",
+                    PetId: petId
+                }).then(response => {
+                    window.location.replace("/profile");
+                });
+            }
+        });
+    });
+
+
+</script>

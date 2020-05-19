@@ -9,10 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     body: {
       type: DataTypes.TEXT,
-      allowNull: false,
-      validate: {
-        len: [1]
-      }
+      allowNull: false
     }
   });
 
@@ -29,7 +26,11 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       }
     });
-    Post.belongsTo(models.Post, {});
+    Post.belongsTo(models.Post, {
+      foreignKey: {
+        allowNull: true
+      }
+    });
   };
 
   return Post;
