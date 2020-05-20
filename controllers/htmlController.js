@@ -65,7 +65,13 @@ router.get("/forum", isAuthenticated, function(req, res) {
  * Profile page
  */
 router.get("/profile", isAuthenticated, function(req, res) {
-  res.render("profile", { user: req.user });
+  db.Post.findAll({
+    where: { UserId: req.user.id },
+    raw: true,
+    include: [{ model: db.Pet, include: [db.Location] }]
+  }).then(dbModel => {
+    res.render("profile", { user: req.user, posts: dbModel });
+  });
 });
 
 // ***** Might need to get all pets or posts and send them in the res.render as well for the routes ****
@@ -117,7 +123,20 @@ router.get("/post/found", isAuthenticated, function(req, res) {
  * View Single Pet Page
  */
 router.get("/view/pet/:id", function(req, res) {
-  res.render("viewPet", { user: req.user });
+  db.Post.findOne({
+    where: { id: req.params.id },
+    raw: true,
+    include: [db.Pet, db.User]
+  }).then(dbModel => {
+    db.Pet.findOne({
+      where: { id: dbModel.PetId },
+      raw: true,
+      include: [db.Location]
+    }).then(petModel => {
+      console.log(petModel);
+      res.render("viewPet", { user: req.user, dbModel, petModel });
+    });
+  });
 });
 
 /**

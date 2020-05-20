@@ -8,4 +8,60 @@
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="card border-primary mb-3 mx-auto" style="width: 45rem;">
+                <div class="card-header text-center">User Information</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>First Name:</b> {{user.firstName}}</li>
+                        <li class="list-group-item"><b>Last Name:</b> {{user.lastName}}</li>
+                        <li class="list-group-item"><b>Email:</b> {{user.email}}</li>
+                        <li class="list-group-item"><b>Phone Number:</b> {{user.phoneNumber}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {{#each posts}}
+            <div class="col">
+                <div class="card mb-3 mx-auto pet-card" style="width:30rem;">
+                    <h3 class="card-header bg-primary text-white text-center">{{title}}</h3>
+                    <img style="width: 100%; display: block;" src={{petModel.picture}}>
+                    <div class="card-body">
+                        <div class="card-header text-center bg-primary text-white">
+                            {{#if 'Pet.name'}}
+                            <h6><b>Name:</b> {{'Pet.name'}}</h6>
+                            {{else}}
+                            <h6>{{'Pet.petType'}}</h6>
+                            {{/if}}
+                        </div>
+                        <div class='card-body'>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><b>Age:</b> {{Pet.age}}</li>
+                                {{#if 'Pet.microchip'}}
+                                <li class="list-group-item"><i class="fa fa-check"></i> Has Microchip</li>
+                                {{/if}}
+                                {{#if Pet.reward}}
+                                <li class="list-group-item"><i class="fa fa-check"></i> There is a reward</li>
+                                {{/if}}
+                                {{#with petModel}}
+                                {{#if name}}
+                                <li class="list-group-item"><b>Last Seen Location:</b> {{'Location.name'}}</li>
+                                {{else}}
+                                <li class="list-group-item">Found Location: {{'Location.name'}}</li>
+                                {{/if}}
+                                {{/with}}
+                            </ul>
+                            <p class="card-text">
+                            <h6 class="text-center">Description:</h6>
+                            {{petModel.description}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>

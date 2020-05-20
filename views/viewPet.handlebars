@@ -1,1 +1,56 @@
 {{> navbar user }}
+
+<div class="row">
+    <div class="col">
+        <div class="card mb-3 mx-auto pet-card" style="width:30rem;">
+            <h3 class="card-header bg-primary text-white text-center">{{title}}</h3>
+            <img style="width: 100%; display: block;" src={{petModel.picture}}>
+            <div class="card-body">
+                <div class="card-header text-center bg-primary text-white">
+                    {{#if 'Pet.name'}}
+                    <h6><b>Name:</b> {{petModel.name}}</h6>
+                    {{else}}
+                    <h6>{{petModel.petType}}</h6>
+                    {{/if}}
+                </div>
+                <div class='card-body'>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><b>Age:</b> {{petModel.age}}</li>
+                        {{#if petModel.microchip}}
+                        <li class="list-group-item"><i class="fa fa-check"></i> Has Microchip</li>
+                        {{/if}}
+                        {{#if petModel.reward}}
+                        <li class="list-group-item">There is a reward</li>
+                        {{/if}}
+                        {{#with petModel}}
+                        {{#if name}}
+                        <li class="list-group-item"><b>Last Seen Location:</b> {{'Location.name'}}</li>
+                        {{else}}
+                        <li class="list-group-item">Found Location: {{'Location.name'}}</li>
+                        {{/if}}
+                        {{/with}}
+                    </ul>
+                    <p class="card-text">
+                    <h6 class="text-center">Description:</h6>
+                    {{petModel.description}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col ">
+                <div class="card border-success mb-3 mx-auto" style="max-width: 25rem;">
+                    <div class="card-header text-center"><h6>User's Contact Information</h6></div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {{#with dbModel}}
+                            <li class="list-group-item"><b>Email:</b> {{'User.email'}}</li>
+                            <li class="list-group-item"><b>Phone Number:</b> {{'User.phoneNumber'}}</li>
+                            {{/with}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
