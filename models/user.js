@@ -16,10 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       lastName: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1, 140]
-        }
+        allowNull: true
       },
       phoneNumber: {
         type: DataTypes.STRING,

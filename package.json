@@ -4,7 +4,6 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "cypress": "concurrently \"cypress open\" \"cross-env NODE_ENV=test PORT=5000 node server.js\"",
     "start": "node server.js",
     "lint": "eslint --quiet .",
     "fix": "eslint --fix .",
@@ -14,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.680.0",
     "bcryptjs": "2.4.3",
     "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
@@ -30,7 +30,6 @@
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "cross-env": "^5.2.1",
-    "cypress": "^4.5.0",
     "eslint": "^4.19.1",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-prettier": "^2.6.2",

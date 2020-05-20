@@ -73,21 +73,13 @@ router.get("/profile", isAuthenticated, function(req, res) {
  * Lost Pets page
  */
 router.get("/view/lost", function(req, res) {
-  db.Post.findAll({ where: { title: "Lost" }, raw: true, include: [db.Pet] })
-    .then(postModel => {
-      db.Pet.findAll({
-        where: { LocationId: req.user.LocationId },
-        raw: true,
-        include: [db.Post]
-      }).then(petModel => {
-        console.log(postModel);
-        console.log(petModel);
-        res.render("viewLost", {
-          user: req.user,
-          posts: postModel,
-          pets: petModel
-        });
-      });
+  db.Post.findAll({
+    where: { title: "Lost", PostId: null },
+    raw: true,
+    include: [db.Pet]
+  })
+    .then(dbModel => {
+      res.render("viewLost", { user: req.user, posts: dbModel });
     })
     .catch(err => res.status(422).json(err));
 });
@@ -96,7 +88,11 @@ router.get("/view/lost", function(req, res) {
  * Found Pets page
  */
 router.get("/view/found", function(req, res) {
-  db.Post.findAll({ where: { title: "Found" }, raw: true, include: [db.Pet] })
+  db.Post.findAll({
+    where: { title: "Found", PostId: null },
+    raw: true,
+    include: [db.Pet]
+  })
     .then(dbModel => {
       res.render("viewFound", { user: req.user, posts: dbModel });
     })
@@ -120,7 +116,7 @@ router.get("/post/found", isAuthenticated, function(req, res) {
 /**
  * View Single Pet Page
  */
-router.get("/view/pet", function(req, res) {
+router.get("/view/pet/:id", function(req, res) {
   res.render("viewPet", { user: req.user });
 });
 
