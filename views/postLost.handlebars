@@ -8,13 +8,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <h4 class="text-center">Featured Found Pets in Your Area</h4>
-            <h6 class="text-center">- Look before you post! -</h6>
-            <hr>
-        </div>
-    </div>
     <div class="row justify-content-center">
         <div class="col-md-6 col-md-offset-3">
             <form class="lostPet">
@@ -30,6 +23,13 @@
                     </div>
                 </div>
                 <hr>
+                <div class="form-group">
+                    <input type="file" id="file-input">
+                    <p id="status">Select a file or choose default image</p>
+                    <img id="preview" src="/paw.jpg">
+
+                    <input type="hidden" id="pet-url" name="pet-url" value="/images/default.png">
+                </div>
                 <div class="form-group">
                     <label for="petName-input">Pet Name</label>
                     <input type="text" class="form-control" id="petName-input" name="Pet Name" placeholder="Pet Name">
@@ -85,11 +85,77 @@
 </div>
 <script>
     $(document).ready(function () {
+        var petPic;
+        /*
+    Function to carry out the actual PUT request to S3 using the signed request from the app.
+  */
+        function uploadFile(file, signedRequest, url) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', signedRequest);
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        petPic = url;
+                        document.getElementById('preview').src = url;
+                        document.getElementById('pet-url').value = url;
+                    }
+                    else {
+                        alert('Could not upload file.');
+                    }
+                }
+            };
+            xhr.send(file);
+        }
+
+        /*
+          Function to get the temporary signed request from the app.
+          If request successful, continue to upload the file using this signed
+          request.
+        */
+        function getSignedRequest(file) {
+            const xhr = new XMLHttpRequest();
+            console.log(file);
+            xhr.open('GET', `/api/pets/sign-s3/${file.name}`);
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        uploadFile(file, response.signedRequest, response.url);
+                    }
+                    else {
+                        alert('Could not get signed URL.');
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        /*
+         Function called when file input updated. If there is a file selected, then
+         start upload procedure by asking for a signed request from the app.
+        */
+        function initUpload() {
+            const files = document.getElementById('file-input').files;
+            const file = files[0];
+            if (file == null) {
+                return alert('No file selected.');
+            }
+            getSignedRequest(file);
+        }
+
+        /*
+         Bind listeners when the page loads.
+        */
+        (() => {
+            document.getElementById('file-input').onchange = initUpload;
+        })();
+
         // Getting references to our form and inputs
         var lostForm = $("form.lostPet");
 
         lostForm.on("submit", function (event) {
             event.preventDefault();
+
             var petTypeInput = $("input[name='type']:checked");
             var petDescriptionInput = $("textarea#petDescription-input");
             var petNameInput = $("input#petName-input");
@@ -119,7 +185,7 @@
                 petAge: petAgeInput.val().trim(),
                 microchip: microchip,
                 reward: reward,
-                location: crossStreetOneInput.val().trim() + "/" + crossStreetTwoInput.val().trim()
+                location: crossStreetOneInput.val().trim() + "/" + crossStreetTwoInput.val().trim(),
             };
 
             setLocation(petData);
@@ -161,7 +227,8 @@
                     age: petData.petAge,
                     microchip: petData.microchip,
                     reward: petData.reward,
-                    LocationId: locationId
+                    LocationId: locationId,
+                    picture: petPic
                 }).then(response => {
                     createPost(response.id);
                 });
