@@ -12,17 +12,17 @@
     <div class="row">
         <div class="col">
             <div class="card mb-3 mx-auto" style="width:25rem;">
-                <h3 class="card-header bg-danger text-white text-center">{{title}}</h3>
-                <img style="width: 100%; display: block;" src={{'Pet.picture'}} alt="Card image">
+                <h3 class="card-header bg-danger text-white text-center">{{title}} {{'Pet.petType'}}</h3>
+                <img style="width: 100%; display: block;" src={{'Pet.picture'}}>
                 <div class="card-body">
                     <div class="card-header text-center bg-primary text-white">
-                        <h6>Name: {{'Pet.name'}}</h6>
+                        <h6><b>Name:</b> {{'Pet.name'}}</h6>
                     </div>
                     <p class="card-text">
-                    <h5>Description:</h5>
+                    <h6 class="text-center">Description:</h6>
                     {{'Pet.description'}}
                     </p>
-                    <button type="button" class="btn btn-primary viewPet">View Pet</button>
+                   <button type="button" class="btn btn-primary viewPet" data-id='{{this.id}}' id="viewLostPet">View Pet</button>
                 </div>
             </div>
         </div>
@@ -30,3 +30,12 @@
     {{/each}}
 
 </div>
+
+<script>
+$(document).ready(function () { 
+    $(document).on("click", "#viewLostPet", function() {
+        var id = $(this).data("id");
+        window.location.replace("/view/pet/" + id);
+    });
+});
+</script>

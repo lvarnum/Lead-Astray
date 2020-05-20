@@ -8,4 +8,33 @@
             </div>
         </div>
     </div>
+    {{#each posts}}
+    <div class="row">
+        <div class="col">
+            <div class="card mb-3 mx-auto" style="width:25rem;">
+                <h3 class="card-header bg-warning text-white text-center">{{title}}</h3>
+                <img style="width: 100%; display: block;" src={{'Pet.picture'}}>
+                <div class="card-body">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h6>{{'Pet.petType'}}</h6>
+                    </div>
+                    <p class="card-text">
+                    <h6 class="text-center">Description:</h6>
+                    {{'Pet.description'}}
+                    </p>
+                    <button type="button" class="btn btn-primary viewPet" data-id='{{this.id}}' id="viewFoundPet">View
+                        Pet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
 </div>
+<script>
+    $(document).ready(function () {
+        $(document).on("click", "#viewFoundPet", function () {
+            var id = $(this).data("id");
+            window.location.replace("/view/pet/" + id);
+        });
+    });
+</script>
