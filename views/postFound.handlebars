@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md">
-            <div class="jumbotron text-center found-title">
+            <div class="jumbotron text-center foundTitle">
                 <h4 class="display-6">Post Found Pet</h4>
             </div>
         </div>
@@ -24,27 +24,27 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <input type="file" id="file-input">
-                    <p id="status">Select a file or choose default image</p>
-                    <img id="preview" src="/paw.jpg">
+                    <input type="file" id="fileInput">
+                    <p id="status">Select a file or continue with default image</p>
+                    <img id="preview" height="100px" width="100px" src="/paw.jpg">
 
-                    <input type="hidden" id="pet-url" name="pet-url" value="/images/default.png">
+                    <input type="hidden" id="petUrl" name="petUrl" value="/paw.jpg">
                 </div>
                 <div class="form-group">
-                    <label for="petDescription-input">Pet Description/Message</label>
-                    <textarea class="form-control" id="petDescription-input" name="petDescription"
+                    <label for="petDescriptionInput">Message/Pet Description</label>
+                    <textarea class="form-control" id="petDescriptionInput" name="petDescription"
                         placeholder="Enter pet description"></textarea>
                 </div>
                 <label>Enter Closest Major Intersection Where the Pet Was Found</label>
                 <hr>
                 <div class="form-group">
-                    <label for="crossStreetOne-input">Cross Street One</label>
-                    <input type="text" class="form-control" id="crossStreetOne-input" name="crossStreetOne"
+                    <label for="crossStreetOneInput">Cross Street One</label>
+                    <input type="text" class="form-control" id="crossStreetOneInput" name="crossStreetOne"
                         placeholder="Cross Street One">
                 </div>
                 <div class="form-group">
-                    <label for="crossStreetTwo-input">Cross Street Two</label>
-                    <input type="text" class="form-control" id="crossStreetTwo-input" name="crossStreetTwo"
+                    <label for="crossStreetTwoInput">Cross Street Two</label>
+                    <input type="text" class="form-control" id="crossStreetTwoInput" name="crossStreetTwo"
                         placeholder="Cross Street Two">
                 </div>
                 <button type="submit" class="btn btn-primary">Post Pet</button>
@@ -54,10 +54,9 @@
 </div>
 <script>
     $(document).ready(function () {
-        var petPic;
-        /*
-    Function to carry out the actual PUT request to S3 using the signed request from the app.
-  */
+        var petPic = "/paw.jpg";
+
+    // --- Handle Photo Upload to S3 Bucket in AWS ---
         function uploadFile(file, signedRequest, url) {
             const xhr = new XMLHttpRequest();
             xhr.open('PUT', signedRequest);
@@ -66,13 +65,14 @@
                     if (xhr.status === 200) {
                         petPic = url;
                         document.getElementById('preview').src = url;
-                        document.getElementById('pet-url').value = url;
+                        document.getElementById('petUrl').value = url;
                     }
                     else {
                         alert('Could not upload file.');
                     }
                 }
             };
+            console.log(signedRequest);
             xhr.send(file);
         }
 
@@ -83,12 +83,13 @@
         */
         function getSignedRequest(file) {
             const xhr = new XMLHttpRequest();
-            console.log(file);
-            xhr.open('GET', `/api/pets/sign-s3/${file.name}`);
+            var fileType = file.type.substring(6);
+            xhr.open('GET', `/api/pets/sign-s3/${file.name}/${fileType}`);
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         const response = JSON.parse(xhr.responseText);
+                        console.log(response);
                         uploadFile(file, response.signedRequest, response.url);
                     }
                     else {
@@ -104,7 +105,7 @@
          start upload procedure by asking for a signed request from the app.
         */
         function initUpload() {
-            const files = document.getElementById('file-input').files;
+            const files = document.getElementById('fileInput').files;
             const file = files[0];
             if (file == null) {
                 return alert('No file selected.');
@@ -116,17 +117,19 @@
          Bind listeners when the page loads.
         */
         (() => {
-            document.getElementById('file-input').onchange = initUpload;
+            document.getElementById('fileInput').onchange = initUpload;
         })();
+    // --- End Photo Upload Handlers ---
+
         // Getting references to our form and inputs
         var foundForm = $("form.foundPet");
 
         foundForm.on("submit", function (event) {
             event.preventDefault();
             var petTypeInput = $("input[name='type']:checked");
-            var petDescriptionInput = $("textarea#petDescription-input");
-            var crossStreetOneInput = $("input#crossStreetOne-input");
-            var crossStreetTwoInput = $("input#crossStreetTwo-input");
+            var petDescriptionInput = $("textarea#petDescriptionInput");
+            var crossStreetOneInput = $("input#crossStreetOneInput");
+            var crossStreetTwoInput = $("input#crossStreetTwoInput");
             var petData = {
                 petType: petTypeInput.val(),
                 petDescription: petDescriptionInput.val().trim(),
@@ -174,7 +177,6 @@
             function createPost(petId) {
                 $.post("/api/posts", {
                     title: "Found",
-                    body: "",
                     PetId: petId
                 }).then(response => {
                     window.location.replace("/profile");
@@ -182,6 +184,4 @@
             }
         });
     });
-
-
 </script>

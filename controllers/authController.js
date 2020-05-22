@@ -21,8 +21,7 @@ router.post("/signup", function(req, res) {
     password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    phoneNumber: req.body.phoneNumber,
-    LocationId: req.body.LocationId
+    phoneNumber: req.body.phoneNumber
   })
     .then(function() {
       res.redirect(307, "/auth/login");

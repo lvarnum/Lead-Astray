@@ -40,18 +40,6 @@
           <input type="text" class="form-control" id="phoneNumber-input" name="phoneNumber" placeholder="Phone Number"
             required>
         </div>
-        <label>Enter Your Closest Major Intersection</label>
-        <hr>
-        <div class="form-group">
-          <label for="crossStreetOne-input">Cross Street One</label>
-          <input type="text" class="form-control" id="crossStreetOne-input" name="crossStreetOne"
-            placeholder="Cross Street One">
-        </div>
-        <div class="form-group">
-          <label for="crossStreetTwo-input">Cross Street Two</label>
-          <input type="text" class="form-control" id="crossStreetTwo-input" name="crossStreetTwo"
-            placeholder="Cross Street Two">
-        </div>
         <button type="submit" class="btn btn-primary">Sign Up</button>
       </form>
       <br />
@@ -69,8 +57,6 @@
     var firstNameInput = $("input#firstName-input");
     var lastNameInput = $("input#lastName-input");
     var phoneNumberInput = $("input#phoneNumber-input");
-    var crossStreetOneInput = $("input#crossStreetOne-input");
-    var crossStreetTwoInput = $("input#crossStreetTwo-input");
 
     // When the form is submitted, we validate there's an email and password entered
     signupForm.on("submit", function (event) {
@@ -80,53 +66,29 @@
         password: passwordInput.val().trim(),
         phoneNumber: phoneNumberInput.val().trim(),
         firstName: firstNameInput.val().trim(),
-        lastName: lastNameInput.val().trim(),
-        location: crossStreetOneInput.val().trim() + "/" + crossStreetTwoInput.val().trim()
+        lastName: lastNameInput.val().trim()
       };
 
       if (!userData.email || !userData.password) {
         return;
       }
 
-      setLocation(userData);
+      signupUser(userData);
       emailInput.val("");
       passwordInput.val("");
       firstNameInput = "";
       lastNameInput = "";
       phoneNumberInput = "";
-      crossStreetOneInput = "";
-      crossStreetTwoInput = "";
     });
 
-    // Get the locationId for the user and sign them up
-    function setLocation(userData) {
-      $.get("/api/locations", {
-      })
-        .then((response) => {
-          for (let i = 0; i < response.length; i++) {
-            if (response[i].name === userData.location) {
-              signupUser(userData.email, userData.password, userData.firstName, userData.lastName, userData.phoneNumber, response[i].id);
-            }
-          }
-        });
-
-      $.post("/api/locations", {
-        name: userData.location
-      })
-        .then((response) => {
-          signupUser(userData.email, userData.password, userData.firstName, userData.lastName, userData.phoneNumber, response.id);
-        })
-    }
-
     // signUp does a post to our "auth/login" route and if successful, redirects us the the members page
-    function signupUser(email, password, firstName, lastName, phoneNumber, locationId) {
+    function signupUser(userData) {
       $.post("/auth/signup", {
-        email: email,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        LocationId: locationId
+        email: userData.email,
+        password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        phoneNumber: userData.phoneNumber
       })
         .then(function () {
           // Get locationID or Create new location

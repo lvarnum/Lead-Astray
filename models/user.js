@@ -20,10 +20,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       phoneNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1, 10]
-        }
+        allowNull: false
       },
       email: {
         type: DataTypes.STRING,
@@ -71,15 +68,7 @@ module.exports = function(sequelize, DataTypes) {
   User.associate = function(models) {
     // Associating User with Posts
     // When an User is deleted, also delete any associated Posts
-    User.hasMany(models.Post, {
-      onDelete: "cascade"
-    });
-
-    User.belongsTo(models.Location, {
-      foreignKey: {
-        allowNull: false
-      }
-    });
+    User.hasMany(models.Post, {});
   };
 
   return User;

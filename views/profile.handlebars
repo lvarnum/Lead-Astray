@@ -10,58 +10,160 @@
     </div>
 
     <div class="row">
-        <div class="col-md">
+        <div class="col-md userInfo">
             <div class="card border-primary mb-3 mx-auto" style="width: 45rem;">
                 <div class="card-header text-center">User Information</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><b>First Name:</b> {{user.firstName}}</li>
                         <li class="list-group-item"><b>Last Name:</b> {{user.lastName}}</li>
-                        <li class="list-group-item"><b>Email:</b> {{user.email}}</li>
-                        <li class="list-group-item"><b>Phone Number:</b> {{user.phoneNumber}}</li>
+                        <li class="list-group-item">
+                            <div class="form-group">
+                                <b>Email: </b> <input type="text" id="userEmailUpdate" class="form-control"
+                                    value={{user.email}}>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="form-group">
+                                <b>Phone Number: </b> <input type="text" id="userPhoneNumberUpdate" class="form-control"
+                                    value={{user.phoneNumber}}>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-success" id="updateProfile" data-id={{user.id}}>Update
+                    Profile</button>
+                <button type="button" class="btn btn-danger" id="deleteProfile" data-id={{user.id}}>Delete
+                    Account</button>
+            </div>
         </div>
-        <div class="row">
-            {{#each posts}}
-            <div class="col">
-                <div class="card mb-3 mx-auto pet-card" style="width:30rem;">
-                    <h3 class="card-header bg-primary text-white text-center">{{title}}</h3>
-                    <img style="width: 100%; display: block;" src={{petModel.picture}}>
-                    <div class="card-body">
-                        <div class="card-header text-center bg-primary text-white">
-                            {{#if 'Pet.name'}}
-                            <h6><b>Name:</b> {{'Pet.name'}}</h6>
-                            {{else}}
-                            <h6>{{'Pet.petType'}}</h6>
+    </div>
+    <div class="row">
+        <div class="col-md profilePostHeader">
+            <h4 class="text-center">Your Posts</h4>
+            <hr>
+        </div>
+    </div>
+    {{#if dbModel}}
+    <div class="row">
+        {{#each dbModel}}
+        <div class="col-md profilePost">
+            <div class="card mb-3 mx-auto" style="width:30rem;">
+                <h3 class="card-header bg-success text-white text-center">{{title}}</h3>
+                <img style="width: 100%; display: block;" src={{'Pet.picture'}}>
+                <div class="card-body">
+                    <div class="card-header text-center bg-primary text-white">
+                        {{#if petName}}
+                        <h6><b>Name:</b> {{'Pet.name'}}</h6>
+                        {{else}}
+                        <h6>{{'Pet.petType'}}</h6>
+                        {{/if}}
+                    </div>
+                    <div class='card-body'>
+                        <ul class="list-group list-group-flush">
+                            {{#if petName}}
+                            <li class="list-group-item"><b>Age:</b> {{'Pet.age'}}</li>
                             {{/if}}
-                        </div>
-                        <div class='card-body'>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><b>Age:</b> {{Pet.age}}</li>
-                                {{#if 'Pet.microchip'}}
-                                <li class="list-group-item"><i class="fa fa-check"></i> Has Microchip</li>
-                                {{/if}}
-                                {{#if Pet.reward}}
-                                <li class="list-group-item"><i class="fa fa-check"></i> There is a reward</li>
-                                {{/if}}
-                                {{#with petModel}}
-                                {{#if name}}
-                                <li class="list-group-item"><b>Last Seen Location:</b> {{'Location.name'}}</li>
-                                {{else}}
-                                <li class="list-group-item">Found Location: {{'Location.name'}}</li>
-                                {{/if}}
-                                {{/with}}
-                            </ul>
+                            {{#if petMicrochip}}
+                            <li class="list-group-item"><i class="fa fa-check"></i> Has Microchip</li>
+                            {{/if}}
+                            {{#if petReward}}
+                            <li class="list-group-item"><i class="fa fa-check"></i> There is a reward</li>
+                            {{/if}}
+                            {{#if petName}}
+                            <li class="list-group-item"><b>Last Seen Location:</b> {{'Pet.Location.name'}}</li>
+                            {{else}}
+                            <li class="list-group-item"><b>Found Location:</b> {{'Pet.Location.name'}}</li>
+                            {{/if}}
+                        </ul>
+                        <div class="form-group">
                             <p class="card-text">
-                            <h6 class="text-center">Description:</h6>
-                            {{petModel.description}}
+                            <h6 class="text-center">Message/Pet Description:</h6>
+                            <textarea class="text-center form-control"
+                                id="updatePetDescription">{{'Pet.description'}}</textarea>
                             </p>
                         </div>
                     </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success" id="updatePost" data-id={{id}}>Update
+                            Post</button>
+                        <button type="button" class="btn btn-danger" id="deletePost" data-id={{id}}>Delete
+                            Post</button>
+                    </div>
                 </div>
             </div>
-            {{/each}}
+        </div>
+        {{/each}}
+        <div class="col-md"></div>
+    </div>
+    {{else}}
+    <div class="row">
+        <div class="col-md noProfilePosts">
+            <h6 class="text-center">- Make a post and it will appear here -</h6>
         </div>
     </div>
+    {{/if}}
+</div>
+<script>
+    var email;
+    var phoneNumber;
+    var description;
+    $("#userEmailUpdate").on("change", function () {
+        email = $(this).val().trim();
+    });
+    $("#userPhoneNumberUpdate").on("change", function () {
+        phoneNumber = $(this).val().trim();
+    });
+    $("#updatePetDescription").on("change", function () {
+        description = $(this).val().trim();
+    });
+    $(document).ready(function () {
+        $("#updateProfile").on("click", function () {
+            var id = $(this).data("id");
+            $.ajax({
+                url: "/api/users/" + id,
+                method: "PUT",
+                data: {
+                    email: email,
+                    phoneNumber: phoneNumber
+                }
+            }).then((response) => {
+                window.location.replace("/auth/logout");
+            });
+        });
+            $("#deleteProfile").on("click", function () {
+                var id = $(this).data("id");
+                console.log("id");
+                $.ajax({
+                    url: "/api/users/" + id,
+                    method: "DELETE"
+                }).then((response) => {
+                    window.location.replace("/auth/logout");
+                });
+            });
+            $(document).on("click", "#updatePost", function () {
+                var id = $(this).data("id");
+                $.ajax({
+                    url: "/api/pets/" + id,
+                    method: "PUT",
+                    data: {
+                        description: description
+                    }
+                }).then((response) => {
+                    location.reload();
+                });
+            });
+            $(document).on("click", "#deletePost", function () {
+                var id = $(this).data("id");
+                $(this).parent().parent().parent().remove();
+                $.ajax({
+                    url: "/api/posts/" + id,
+                    method: "DELETE"
+                }).then((response) => {
+                    location.reload();
+                });
+            });
+        });
+</script>

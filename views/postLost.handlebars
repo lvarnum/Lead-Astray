@@ -25,10 +25,10 @@
                 <hr>
                 <div class="form-group">
                     <input type="file" id="file-input">
-                    <p id="status">Select a file or choose default image</p>
-                    <img id="preview" src="/paw.jpg">
+                    <p id="status">Select a file or continue with default image</p>
+                    <img id="preview" height="80px" width="80px" src="/paw.jpg">
 
-                    <input type="hidden" id="pet-url" name="pet-url" value="/images/default.png">
+                    <input type="hidden" id="pet-url" name="pet-url" value="/paw.jpg">
                 </div>
                 <div class="form-group">
                     <label for="petName-input">Pet Name</label>
@@ -39,7 +39,7 @@
                     <input type="text" class="form-control" id="petAge-input" name="petAge" placeholder="Pet Age">
                 </div>
                 <div class="form-group">
-                    <label for="petDescription-input">Pet Description</label>
+                    <label for="petDescription-input">Message/Pet Description</label>
                     <textarea class="form-control" id="petDescription-input" name="petDescription"
                         placeholder="Enter your pet's description"></textarea>
                 </div>
@@ -85,7 +85,7 @@
 </div>
 <script>
     $(document).ready(function () {
-        var petPic;
+        var petPic = "/paw.jpg";
         /*
     Function to carry out the actual PUT request to S3 using the signed request from the app.
   */
@@ -114,8 +114,8 @@
         */
         function getSignedRequest(file) {
             const xhr = new XMLHttpRequest();
-            console.log(file);
-            xhr.open('GET', `/api/pets/sign-s3/${file.name}`);
+            var fileType = file.type.substring(6);
+            xhr.open('GET', `/api/pets/sign-s3/${file.name}/${fileType}`);
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
@@ -237,7 +237,6 @@
             function createPost(petId) {
                 $.post("/api/posts", {
                     title: "Lost",
-                    body: "",
                     PetId: petId
                 }).then(response => {
                     window.location.replace("/profile");

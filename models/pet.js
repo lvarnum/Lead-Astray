@@ -16,13 +16,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        notEmpty: true,
         len: [1]
       }
     },
     microchip: {
       type: DataTypes.BOOLEAN,
-      default: false
+      defaultValue: false
     },
     //picture url will be stored as a string
     picture: {
@@ -30,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     reward: {
       type: DataTypes.BOOLEAN,
-      default: false
+      defaultValue: false
     },
     petType: {
       type: DataTypes.STRING,
@@ -39,9 +38,7 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   Pet.associate = function(models) {
-    Pet.hasOne(models.Post, {
-      onDelete: "cascade"
-    });
+    Pet.hasOne(models.Post, {});
     Pet.belongsTo(models.Location, {
       foreignKey: {
         allowNull: false
