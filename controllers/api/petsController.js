@@ -52,10 +52,10 @@ router.delete("/:id", function(req, res) {
     .catch(err => res.status(422).json(err));
 });
 
-router.get("/sign-s3/:fileName/", (req, res) => {
+router.get("/sign-s3/:fileName/:fileType", (req, res) => {
   const s3 = new aws.S3();
   const fileName = req.params.fileName;
-  const fileType = "image/jpeg";
+  const fileType = "image/" + req.params.fileType;
   const s3Params = {
     Bucket: process.env.S3_BUCKET,
     Key: fileName,

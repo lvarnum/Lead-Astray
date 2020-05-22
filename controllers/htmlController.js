@@ -42,45 +42,43 @@ router.get("/login", function(req, res) {
 });
 
 /**
- * Get comment creation page for testing purposes only*******
- */
-router.get("/comment", isAuthenticated, function(req, res) {
-  res.render("comment", { user: req.user });
-});
-
-// Only need to be logged in to post a comment not see them (forum = comment)******
-/**
- * Forum Page -
- * Notice loading our posts, with that include!
- */
-router.get("/forum", isAuthenticated, function(req, res) {
-  db.Post.findAll({ raw: true, include: [db.User] }) // Joins User to Posts! And scrapes all the seqeulize stuff off
-    .then(dbModel => {
-      res.render("forum", { user: req.user, posts: dbModel });
-    })
-    .catch(err => res.status(422).json(err));
-});
-
-/**
  * Profile page
  */
 router.get("/profile", isAuthenticated, function(req, res) {
+  // Join Posts to Pets and double join Location to the object
   db.Post.findAll({
     where: { UserId: req.user.id },
     raw: true,
     include: [{ model: db.Pet, include: [db.Location] }]
   }).then(dbModel => {
-    res.render("profile", { user: req.user, posts: dbModel });
+    // Check if the user has any posts before going to the profile
+    if (dbModel.length !== 0) {
+      // Set values to distinguish between elements of lost pets and  found pets
+      for (let i = 0; i < dbModel.length; i++) {
+        if (dbModel[i]["Pet.name"] !== null) {
+          dbModel[i].petName = true;
+        }
+        if (dbModel[i]["Pet.reward"] === 1) {
+          dbModel[i].petReward = true;
+        }
+        if (dbModel[i]["Pet.microchip"] === 1) {
+          dbModel[i].petMicrochip = true;
+        }
+      }
+      res.render("profile", { user: req.user, dbModel });
+    } else {
+      res.render("profile", { user: req.user });
+    }
   });
 });
 
-// ***** Might need to get all pets or posts and send them in the res.render as well for the routes ****
 /**
  * Lost Pets page
  */
 router.get("/view/lost", function(req, res) {
+  // Find all Posts titled lost and join the Pet model then render the page
   db.Post.findAll({
-    where: { title: "Lost", PostId: null },
+    where: { title: "Lost" },
     raw: true,
     include: [db.Pet]
   })
@@ -94,8 +92,9 @@ router.get("/view/lost", function(req, res) {
  * Found Pets page
  */
 router.get("/view/found", function(req, res) {
+  // Find all Posts titled found and join the Pet model then render the page
   db.Post.findAll({
-    where: { title: "Found", PostId: null },
+    where: { title: "Found" },
     raw: true,
     include: [db.Pet]
   })
@@ -123,17 +122,18 @@ router.get("/post/found", isAuthenticated, function(req, res) {
  * View Single Pet Page
  */
 router.get("/view/pet/:id", function(req, res) {
+  // Find the Post with the given id and join Pet and User models
   db.Post.findOne({
     where: { id: req.params.id },
     raw: true,
     include: [db.Pet, db.User]
   }).then(dbModel => {
+    // Find the correct pet and join it's location then render the page
     db.Pet.findOne({
       where: { id: dbModel.PetId },
       raw: true,
       include: [db.Location]
     }).then(petModel => {
-      console.log(petModel);
       res.render("viewPet", { user: req.user, dbModel, petModel });
     });
   });
