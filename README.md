@@ -1,10 +1,10 @@
-# Project 2 Starter Kit
+# Lead Astray App
 
-The Project 2 Starter Kit is an opinionated, preconfigured MVC-style application intended to satisfy the stated requirements and additional requirements of Project 2. It comes with a prerolled authentication system, cypress integration testing, and eslint configuration.
+A command-line app that can be used by pet owners to get re-united with their furry friends.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -34,13 +34,11 @@ yarn
 Next run the schema.sql as found within `db/schema.sql`. It should contain: 
 ```
 DROP DATABASE IF EXISTS project_2_local;
-CREATE DATABASE project_2_local;
+CREATE DATABASE lead_astray_db;
 
 DROP DATABASE IF EXISTS project_2_test;
-CREATE DATABASE project_2_test;
+CREATE DATABASE lead_astray_db;
 ```
-These names are of course up to you; however, we will need a test and local database if we wish to use the prerolled integration tests. 
-
 * Note: If you are going to change the local database/test database, make sure to follow the Note in the next ste. 
 
 Next, we need to put in your configuration for the connection to your local database server. This can be found in `config.json` in the `config` folder. Currently, it looks like: 
@@ -50,7 +48,7 @@ Next, we need to put in your configuration for the connection to your local data
   "development": {
     "username": "root",
     "password": null,
-    "database": "project_2_local",
+    "database": "lead_astray_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
@@ -62,10 +60,7 @@ Next, we need to put in your configuration for the connection to your local data
     "dialect": "mysql"
   },
   "production": {
-    "username": null,
-    "password": null,
-    "database": null,
-    "host": null,
+    "use_env_variable": "JAWSDB_URL"
     "dialect": "mysql"
   }
 }
@@ -84,57 +79,11 @@ It has three connections;
     * For your deployment. 
     * The username, host, port, password, and database name will be from your JAWS configuration. 
 
-Once you have down that; you are ready to run the server, with:
+Once you have that down; you are ready to run the server, with:
 
 ```
 npm run start
 ```
-
-
-## Running the tests
-
-Currently, the application only has cypress integration tests. These can be run by the command 
-
-```
-npm run cypress
-```
-
-which concurrently starts a test instance of the application and then starts an instance of cypress connected to the application. The configuration currently set for the TEST instance, as indicated by passing the ```NODE_ENV=test```
-
-### Tests you likely don't want to remove: 
-
-```
-integration/_base/_canary
-integration/_base/login
-integration/_base/signup
-```
-
-This battery of tests does:
-
-- A simple canary test to make sure the application is running
-- Check to make sure the current login form works with the given test user
-- Check to make sure the current signup form works for a new user. This even tests the API to make sure a new user is created!
-
-If you change the login or signup form, or more specifically, the layout and ids of the inputs, you will need to change it in the tests if you want to continue to use them. 
-
-
-### Configurable Tests
-
-The following tests are examples for what you can do, with the example forum application: 
-
-```
-integration/forum/layout
-integration/forum/posts
-```
-
-These are *examples* as they are specific to the forum. Take this as a good idea regarding structure: 
-
-1. For every page, check the layout. Did everything load correctly? This is especially helpful on handlebars pages where we might have multiple partials loading
-2. If the page is interactive, test that too.
-3. If the page talks to an API, creates something, test that too.
-
-
-
 ## Structure
 
 The structure of the application, as produced, is replicated below, with folders marked with ```-``` and files marked with ```*```. Below this, please find the detailed description of each file and what it is doing. 
@@ -147,37 +96,25 @@ The structure of the application, as produced, is replicated below, with folders
     * passport.js
 - controllers
     - api
-        * index.js
+        * locationsController.js
+        * petsController.js
         * postsController.js
         * usersController.js
     * authController.js
     * htmlController.js
-    * index.js
-- cypress
-    - fixtures
-    - integration
-        - _base
-            * _canary.js
-            * login.js
-            * signup.js
-        - forum
-            * layout.js
-            * posts.s
-    - plugins
-        * index.js
-    - support
-        * commands.js
-        * index.js
 - db
     * schema.sql
 - models
-    * index.js
+    * location.js
+    * pet.js
     * post.js
     * user.js
 - public
     - stylesheets
         * style.css
+    * android-chrome.png
     * favicon.ico
+    * paw.jpg
 - views
     - errors
         * 404.handlebars
@@ -185,13 +122,16 @@ The structure of the application, as produced, is replicated below, with folders
         * main.handlebars
     - partials
         * navbar.handlebars
-    * forum.handlebars
     * index.handlebars
     * login.handlebars
+    * postFound.handlebars
+    * postLost.handlebars
+    * profile.handlebars
     * signup.handlebars
-* .eslintignore
-* .eslintrc.json
-* cypress.json
+    * viewFound.handlebars
+    * viewLost.handlebars
+    * viewPet.handlebars
+*.gitignore
 * package.json
 * README.md
 * server.js
@@ -212,21 +152,6 @@ The structure of the application, as produced, is replicated below, with folders
     * authController.js: Authentication controller to enable authentication. Exposes four routes, read up on them to understand, and if you change the layout or structure of the login/signup pages you may need to change this. 
     * **htmlController.js**: Where we send our pages from. Notice the ```GET /forum``` route! It uses the ```isAuthenticated``` middleware to prevent access to clients who aren't logged in. Yes, it's that simple - just add ```isAuthenticated``` in between the path and the callback, to make it so someone has to be logged in. 
     * **index.js**: The master registry for all controllers. It registers auth, api, and the html controller. You likely *won't* need to modify this, but if you add a whole new set of controllers or another top level one, you will need to add it here. This is imported by ```server.js```.  
-- cypress: Cypress stuff
-    - fixtures: If we need to load the same data every time, it goes here. We aren't using this right now.
-    - integration: All of our tests! See test explanations above.
-        - _base
-            * _canary.js
-            * login.js
-            * signup.js
-        - forum
-            * layout.js
-            * posts.s
-    - plugins: We aren't using this, this is autogenerated by cypress when installed. 
-        * index.js
-    - support
-        * commands.js: This adds a ```login``` and ```logout``` command so that in any other test, we can say ```cy.login()``` add login within that block. (So we don't have to do it over and over and *over* again)
-        * index.js: 
 - db
     * schema.sql: Our schema file.
 - models
@@ -244,13 +169,13 @@ The structure of the application, as produced, is replicated below, with folders
         * main.handlebars: Our main page. This brings in scripts!
     - partials
         * navbar.handlebars: A partial, factored out for clarity. Notice how it takes in **user**. You will need to pass in ```req.user``` as ```user``` to any render that is utilizing the ```navbar``` partial
-    * forum.handlebars: An example show and create data page. 
+    * postFound.handlebars: Handles creation and posting of found pets
+    * postLost.handlebars : Handles creation and posting of lost pets
+    * viewFound.handlebars : Renders found pets
+    * viewLost.handlebars : Renders lost pets
     * index.handlebars: The landing page. It currently has a list of all the requirements. **You should change this.**
-    * login.handlebars: The login page. Probably doesn't need to be changed, barring styling.
-    * signup.handlebars:  The signup page. Probably doesn't need to be changed, barring styling.
-* .eslintignore: What files eslint should ignore. *Always* ignore node_modules unless you want to crash eslint.
-* .eslintrc.json: What configuration we want for ESLint. A default, barely intrusive version.
-* cypress.json: Our configuration for cypress. By default, it just takes in the port we need for cypress.
+    * login.handlebars: The login page. 
+    * signup.handlebars:  The signup page. 
 * package.json: The package.json
 * README.md: This file.
 * **server.js**: Our entry point. It handles all the top level imports, hooking up our express instance with all the middleware, including authentication and the router, and then initializes a sequelize connection and the server listening. 
@@ -288,6 +213,12 @@ Please follow the configuration guide supplied in Unit 14. You will need to:
 - Add an instance of JawsDB and add the connection information in ```config/config.json```
 - Pass the config var ```NODE_ENV = production``` in the deployed version. 
 
+## Authors
+
+- Laynah
+- Paul
+- Joanna
+
 ## Built With
 
 * [Express](https://expressjs.com/) - Express, our web framework
@@ -296,7 +227,7 @@ Please follow the configuration guide supplied in Unit 14. You will need to:
 * [Sequelize](https://sequelize.org/) - Sequelize, our ORM
 * [Passport](https://www.npmjs.com/package/passport) - Passport is a an authentication middleware for Express that lets us off load a bunch of the fiddly bits of authentication. 
 * [Passport-Local](https://www.npmjs.com/package/passport-local) - Passport is a an authentication middleware for Express that lets us off load a bunch of the fiddly bits of authentication. 
-* [Cypress](https://www.cypress.io/) - Cypress is a front-end testing suite that allows for automation of browser based tests.
+
 
 ## License
 
