@@ -1,21 +1,13 @@
 form.signup,
 form.login,
-form.lostPet,
-form.foundPet {
+form.lost-pet,
+form.found-pet {
   margin-top: 15px;
 }
 
-form.lostPet,
-form.foundPet {
+form.lost-pet,
+form.found-pet {
   margin-bottom: 100px;
-}
-
-.forum-post-card {
-  width: 100%;
-}
-
-.forum-post {
-  width: 100%;
 }
 
 footer {
@@ -32,7 +24,7 @@ body {
   font-size: 35px;
 }
 
-.homeHeader {
+.home-header {
   margin-top: 100px;
   margin-bottom: 100px;
 }
@@ -46,17 +38,13 @@ body {
   background-color: mintcream;
 }
 
-.login-title, .signup-title, .profile-title, .lost-title, .foundTitle {
+.login-title, .signup-title, .profile-title, .lost-title, .found-title {
   margin-top: 15px;
   background-color: aliceblue;
 }
 
-.orLogin {
+.or-login, .post-col  {
   margin-bottom: 80px;
-}
-
-.commentLegend {
-  margin-top: 100px;
 }
 
 .dropdown-menu {
@@ -83,27 +71,23 @@ margin-bottom: 15px;
   margin-bottom: 10px;
 }
 
-.viewPet {
+.view-pet {
   display: block;
   margin: 0 auto;
 }
 
-.userInfo {
-  margin-bottom: 50px;
-}
-
-.profilePost {
-  margin-bottom: 50px;
-}
-
-.profilePostHeader {
+.profile-post-header {
 margin-bottom: 30px;
 }
 
-.petCard {
+.pet-card {
   margin-top: 50px;
 }
 
-.noProfilePosts {
+.no-profile-posts {
   margin-bottom: 200px;
+}
+
+.found-pet-post, .lost-pet-post, .user-contact-info, .profile-post, .user-info {
+  margin-bottom: 50px;
 }

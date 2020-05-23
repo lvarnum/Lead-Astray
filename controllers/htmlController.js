@@ -53,7 +53,7 @@ router.get("/profile", isAuthenticated, function(req, res) {
   }).then(dbModel => {
     // Check if the user has any posts before going to the profile
     if (dbModel.length !== 0) {
-      // Set values to distinguish between elements of lost pets and  found pets
+      // Set values to distinguish between elements of lost pets and found pets
       for (let i = 0; i < dbModel.length; i++) {
         if (dbModel[i]["Pet.name"] !== null) {
           dbModel[i].petName = true;
@@ -64,6 +64,10 @@ router.get("/profile", isAuthenticated, function(req, res) {
         if (dbModel[i]["Pet.microchip"] === 1) {
           dbModel[i].petMicrochip = true;
         }
+      }
+      // For formatting posts
+      if (dbModel.length === 1) {
+        dbModel.single = true;
       }
       res.render("profile", { user: req.user, dbModel });
     } else {

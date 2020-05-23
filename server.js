@@ -42,10 +42,7 @@ app.set("view engine", "handlebars");
 app.use(routes);
 
 let config = { force: false };
-if (process.env.NODE_ENV === "test") {
-  config.force = true;
-}
-// if we need it! {force:true}
+
 // Syncing our database and logging a message to the user upon success
 db.sequelize.sync(config).then(function() {
   if (process.env.NODE_ENV === "test") {
