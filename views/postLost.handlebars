@@ -10,11 +10,11 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-6 col-md-offset-3">
-            <form class="lostPet">
+            <form class="lost-pet">
                 <div class="form-group">
                     <label>Choose Pet Type</label>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="cat" name="type" value="Cat" class="custom-control-input">
+                        <input type="radio" id="cat" name="type" value="Cat" class="custom-control-input" required>
                         <label class="custom-control-label" for="cat">Cat</label>
                     </div>
                     <div class="custom-control custom-radio">
@@ -26,28 +26,27 @@
                 <div class="form-group">
                     <input type="file" id="file-input">
                     <p id="status">Select a file or continue with default image</p>
-                    <img id="preview" height="80px" width="80px" src="/paw.jpg">
+                    <img id="preview" height="110px" width="110px" src="/paw.jpg">
 
-                    <input type="hidden" id="pet-url" name="pet-url" value="/paw.jpg">
+                    <input type="hidden" id="petUrl" name="petUrl" value="/paw.jpg">
                 </div>
                 <div class="form-group">
                     <label for="petName-input">Pet Name</label>
-                    <input type="text" class="form-control" id="petName-input" name="Pet Name" placeholder="Pet Name">
+                    <input type="text" class="form-control" id="petName-input" name="Pet Name" placeholder="Pet Name" required>
                 </div>
                 <div class="form-group">
                     <label for="petAge-input">Pet Age</label>
-                    <input type="text" class="form-control" id="petAge-input" name="petAge" placeholder="Pet Age">
+                    <input type="text" class="form-control" id="petAge-input" name="petAge" placeholder="Pet Age" required>
                 </div>
                 <div class="form-group">
                     <label for="petDescription-input">Message/Pet Description</label>
                     <textarea class="form-control" id="petDescription-input" name="petDescription"
-                        placeholder="Enter your pet's description"></textarea>
+                        placeholder="Enter your pet's description" required></textarea>
                 </div>
                 <div class="form-group">
                     <label>Microchip</label>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="microchip-yes" name="microchip" value="yes"
-                            class="custom-control-input">
+                        <input type="radio" id="microchip-yes" name="microchip" value="yes" class="custom-control-input" required>
                         <label class="custom-control-label" for="microchip-yes">Yes</label>
                     </div>
                     <div class="custom-control custom-radio no-micro">
@@ -58,7 +57,7 @@
                 <div class="form-group">
                     <label>Reward</label>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="reward-yes" name="reward" value="yes" class="custom-control-input">
+                        <input type="radio" id="reward-yes" name="reward" value="yes" class="custom-control-input" required>
                         <label class="custom-control-label" for="reward-yes">Yes</label>
                     </div>
                     <div class="custom-control custom-radio no-reward">
@@ -71,12 +70,12 @@
                 <div class="form-group">
                     <label for="crossStreetOne-input">Cross Street One</label>
                     <input type="text" class="form-control" id="crossStreetOne-input" name="crossStreetOne"
-                        placeholder="Cross Street One">
+                        placeholder="Cross Street One" required>
                 </div>
                 <div class="form-group">
                     <label for="crossStreetTwo-input">Cross Street Two</label>
                     <input type="text" class="form-control" id="crossStreetTwo-input" name="crossStreetTwo"
-                        placeholder="Cross Street Two">
+                        placeholder="Cross Street Two" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Post Pet</button>
             </form>
@@ -86,9 +85,8 @@
 <script>
     $(document).ready(function () {
         var petPic = "/paw.jpg";
-        /*
-    Function to carry out the actual PUT request to S3 using the signed request from the app.
-  */
+
+    // --- Functions to handle the photo uploading ---
         function uploadFile(file, signedRequest, url) {
             const xhr = new XMLHttpRequest();
             xhr.open('PUT', signedRequest);
@@ -97,7 +95,7 @@
                     if (xhr.status === 200) {
                         petPic = url;
                         document.getElementById('preview').src = url;
-                        document.getElementById('pet-url').value = url;
+                        document.getElementById('petUrl').value = url;
                     }
                     else {
                         alert('Could not upload file.');
@@ -149,9 +147,10 @@
         (() => {
             document.getElementById('file-input').onchange = initUpload;
         })();
+    // --- End of photo upload handling ---
 
         // Getting references to our form and inputs
-        var lostForm = $("form.lostPet");
+        var lostForm = $("form.lost-pet");
 
         lostForm.on("submit", function (event) {
             event.preventDefault();
@@ -198,6 +197,7 @@
             crossStreetOneInput.val("");
             crossStreetTwoInput.val("");
 
+        // Get a locationId for the pet by either creating a new location or accessing an existing one
             function setLocation(petData) {
                 $.get("/api/locations", {
                 })
@@ -217,7 +217,7 @@
                     });
             }
 
-            // Need to add picture!!!
+        // Create pet
             function createPet(petData, locationId) {
                 console.log(petData);
                 $.post("/api/pets", {
@@ -234,6 +234,7 @@
                 });
             }
 
+        // Create post
             function createPost(petId) {
                 $.post("/api/posts", {
                     title: "Lost",

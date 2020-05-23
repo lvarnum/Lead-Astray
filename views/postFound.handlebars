@@ -10,11 +10,11 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-6 col-md-offset-3">
-            <form class="foundPet">
+            <form class="found-pet">
                 <div class="form-group">
                     <label>Choose Pet Type</label>
                     <div class="custom-control custom-radio">
-                        <input type="radio" id="cat" name="type" value="Cat" class="custom-control-input">
+                        <input type="radio" id="cat" name="type" value="Cat" class="custom-control-input" required>
                         <label class="custom-control-label" for="cat">Cat</label>
                     </div>
                     <div class="custom-control custom-radio">
@@ -26,26 +26,26 @@
                 <div class="form-group">
                     <input type="file" id="fileInput">
                     <p id="status">Select a file or continue with default image</p>
-                    <img id="preview" height="100px" width="100px" src="/paw.jpg">
+                    <img id="preview" height="110px" width="110px" src="/paw.jpg">
 
                     <input type="hidden" id="petUrl" name="petUrl" value="/paw.jpg">
                 </div>
                 <div class="form-group">
                     <label for="petDescriptionInput">Message/Pet Description</label>
                     <textarea class="form-control" id="petDescriptionInput" name="petDescription"
-                        placeholder="Enter pet description"></textarea>
+                        placeholder="Enter pet description" required></textarea>
                 </div>
                 <label>Enter Closest Major Intersection Where the Pet Was Found</label>
                 <hr>
                 <div class="form-group">
                     <label for="crossStreetOneInput">Cross Street One</label>
                     <input type="text" class="form-control" id="crossStreetOneInput" name="crossStreetOne"
-                        placeholder="Cross Street One">
+                        placeholder="Cross Street One" required>
                 </div>
                 <div class="form-group">
                     <label for="crossStreetTwoInput">Cross Street Two</label>
                     <input type="text" class="form-control" id="crossStreetTwoInput" name="crossStreetTwo"
-                        placeholder="Cross Street Two">
+                        placeholder="Cross Street Two" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Post Pet</button>
             </form>
@@ -122,7 +122,7 @@
     // --- End Photo Upload Handlers ---
 
         // Getting references to our form and inputs
-        var foundForm = $("form.foundPet");
+        var foundForm = $("form.found-pet");
 
         foundForm.on("submit", function (event) {
             event.preventDefault();
@@ -142,6 +142,7 @@
             crossStreetOneInput.val("");
             crossStreetTwoInput.val("");
 
+        // Get a locationId for the pet by either creating location or accessing an existing one.
             function setLocation(petData) {
                 $.get("/api/locations", {
                 })
@@ -161,7 +162,7 @@
                     });
             }
 
-            // Need to add picture!!!
+        // Create the pet
             function createPet(petData, locationId) {
                 console.log(petData);
                 $.post("/api/pets", {
@@ -174,6 +175,7 @@
                 });
             }
 
+        // Create the post
             function createPost(petId) {
                 $.post("/api/posts", {
                     title: "Found",

@@ -11,8 +11,8 @@
     {{#if posts}}
     {{#each posts}}
     <div class="row">
-        <div class="col">
-            <div class="card mb-3 mx-auto" style="width:25rem;">
+        <div class="col-md lost-pet-post">
+            <div class="card mb-3 mx-auto" style="max-width:30rem;">
                 <h3 class="card-header bg-danger text-white text-center">{{title}} {{'Pet.petType'}}</h3>
                 <img style="width: 100%; display: block;" src={{'Pet.picture'}}>
                 <div class="card-body">
@@ -20,10 +20,10 @@
                         <h6><b>Name:</b> {{'Pet.name'}}</h6>
                     </div>
                     <p class="card-text">
-                    <h6 class="text-center">Message/Pet Description:</h6>
-                    {{'Pet.description'}}
+                    <h6 class="text-center"><b>Message/Pet Description:</b></h6>
+                    <div class="text-center">{{'Pet.description'}}</div>
                     </p>
-                   <button type="button" class="btn btn-primary viewPet" data-id='{{this.id}}' id="viewLostPet">View Pet</button>
+                   <button type="button" class="btn btn-primary view-pet" data-id='{{this.id}}' id="viewLostPet">View Pet</button>
                 </div>
             </div>
         </div>
